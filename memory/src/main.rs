@@ -12,6 +12,8 @@ const MB: usize = 1024 * KB;
 type Duration = rustcommon_heatmap::Duration<Nanoseconds<u64>>;
 type Instant = rustcommon_heatmap::Instant<Nanoseconds<u64>>;
 
+const SIZE: usize = 32 * MB;
+
 fn main() {
     println!("Hello, world!");
 
@@ -26,13 +28,11 @@ fn main() {
             break;
         }
 
-        copy(MB);
+        copy(SIZE);
 
         let elapsed = start.elapsed().as_nanos() as u64;
 
-        // println!("elapsed: {}", elapsed);
-        heatmap.increment(start, elapsed, MB as u64);
-
+        heatmap.increment(start, elapsed, SIZE as u64);
     }
 
     WaterfallBuilder::new("waterfall.png")
@@ -46,20 +46,6 @@ fn main() {
         .scale(Scale::Logarithmic)
         .palette(Palette::Ironbow)
         .build(&heatmap);
-
-    // let mut size = KB;
-
-    // while size < MB {
-    //     let rate = copy(size);
-    //     println!("size: {} KB rate: {:.02} MB/s", size / KB, rate);
-    //     size *= 2;
-    // }
-
-    // while size <= GB {
-    //     let rate = copy(size);
-    //     println!("size: {} MB rate: {:.02} MB/s", size / MB, rate);
-    //     size *= 2;
-    // }
 }
 
 // allocate two regions of the given size, copy data from one to the other, return the
